@@ -1,7 +1,13 @@
+# journal/urls.py
+
 from django.urls import path
-from .views import entry_list, entry_create
+from django.contrib.auth import views as auth_views
+from . import views
 
 urlpatterns = [
-    path('', entry_list, name='entry_list'),
-    path('new/', entry_create, name='entry_create'),
+    path('', views.index, name='index'),  # Map the root URL to the index view
+    path('login/', views.CustomLoginView.as_view(), name='login'),  # Custom login view
+    path('logout/', auth_views.LogoutView.as_view(next_page='index'), name='logout'),  # Logout view
+    path('register/', views.registration_view, name='registration'),  # Registration view
+    path('search/', views.search_view, name='search'),  # Search view
 ]

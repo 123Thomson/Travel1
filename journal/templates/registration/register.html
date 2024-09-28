@@ -1,25 +1,25 @@
-<!-- journal/templates/registration/login.html -->
+<!-- journal/templates/registration/register.html -->
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Registration Page</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'journal/css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'journal/css/register.css' %}">
     <link rel="stylesheet" href="{% static 'journal/css/nav.css' %}">
 </head>
 <body>
     {% include 'journal/nav.html' %}
-    <div class="login-container">
-        <h2>Login</h2>
+    <div class="register-container">
+        <h2>Register</h2>
         <form method="POST">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit">Login</button>
+            <button type="submit">Register</button>
         </form>
-        <p>Don't have an account? <a href="{% url 'registration' %}">Register here</a></p>
+        <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
     </div>
 </body>
 </html>

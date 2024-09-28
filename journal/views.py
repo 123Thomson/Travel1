@@ -1,28 +1,34 @@
+# journal/views.py
+
 from django.shortcuts import render, redirect
-from .models import TravelEntry
-from .forms import TravelEntryForm  # Create this form in the next step
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login as auth_login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView  # Make sure to import LoginView
 
-def entry_list(request):
-    if request.user.is_authenticated:
-        # Fetch the user's travel entries
-        entries = TravelEntry.objects.filter(user=request.user)  # Assuming you have a ForeignKey to User in your model
-    else:
-        # Redirect to the login page or show a message
-        return redirect('login')  # Redirect to the login view or show an appropriate message
+# View to load the index page
+def index(request):
+    return render(request, 'journal/index.html')
 
-    return render(request, 'journal/entry_list.html', {'entries': entries})
-
-def entry_create(request):
+# View for user registration
+def registration_view(request):
     if request.method == 'POST':
-        form = TravelEntryForm(request.POST, request.FILES)
+        form = UserCreationForm(request.POST)
         if form.is_valid():
-            travel_entry = form.save(commit=False)
-            travel_entry.user = request.user
-            travel_entry.save()
-            return redirect('entry_list')
+            user = form.save()
+            auth_login(request, user)  # Automatically log in the user
+            return redirect('index')  # Redirect to index after registration
     else:
-        form = TravelEntryForm()
-    return render(request, 'journal/entry_form.html', {'form': form})
+        form = UserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})
 
-def home(request):
-    return render(request, 'journal/home.html')
+# Custom login view using Django's LoginView
+class CustomLoginView(LoginView):
+    template_name = 'registration/login.html'
+
+
+# View for search functionality
+def search_view(request):
+    query = request.GET.get('q')
+    # Implement your search logic here, returning results as necessary
+    return render(request, 'journal/search_results.html', {'query': query})  # Example result page
